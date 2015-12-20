@@ -1,0 +1,1223 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     49820,       1214]
+NotebookOptionsPosition[     47863,       1142]
+NotebookOutlinePosition[     48282,       1158]
+CellTagsIndexPosition[     48239,       1155]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Clock synchronization, single frame", "Title",
+ CellChangeTimes->{{3.554735751801524*^9, 3.5547357668403845`*^9}, {
+   3.555242551647725*^9, 3.555242559935199*^9}, {3.5562259046406727`*^9, 
+   3.5562259090469246`*^9}, {3.5562262690965185`*^9, 
+   3.5562262691585217`*^9}, {3.557079766632569*^9, 3.557079770006762*^9}, 
+   3.5631879896591387`*^9, {3.5633167254424715`*^9, 3.5633167297497177`*^9}, {
+   3.5633975441826715`*^9, 3.5633975488529387`*^9}, {3.563504543575477*^9, 
+   3.563504545292575*^9}, {3.563567713508373*^9, 3.5635677151144648`*^9}, {
+   3.5667229627036705`*^9, 3.566722969941085*^9}, {3.567430170369695*^9, 
+   3.567430180564278*^9}, 3.5683824165196457`*^9}],
+
+Cell[CellGroupData[{
+
+Cell["Description of Demonstration", "Section",
+ CellChangeTimes->{{3.5547361331773376`*^9, 3.5547361395447016`*^9}}],
+
+Cell["\<\
+This is a demo that would precede demo number 9. The goal is to give user the \
+experience of setting up a collection of clocks and successfully using the \
+light synchronization method. Perhaps something like this: Demo has 11 clocks \
+set up, 1 at origin, 5 on either side. The clocks are digital. The user knows \
+their distance from the origin and has to set the initial time on each in an \
+effort to have them all in synch when a light flash from origin sets them \
+going. User hits play, flash goes off and travels left/right. User sees \
+whether or not clocks are running in sync.\
+\>", "Text",
+ CellChangeTimes->{{3.55473614494501*^9, 3.554736155336605*^9}, {
+   3.5552425640394335`*^9, 3.555242648784281*^9}, {3.555242683671276*^9, 
+   3.5552426840242963`*^9}, {3.555242746800887*^9, 3.5552427854150953`*^9}, {
+   3.556225919503523*^9, 3.556226112406556*^9}, {3.556226333535204*^9, 
+   3.556226373767505*^9}, {3.5570797740239916`*^9, 3.5570798531355166`*^9}, {
+   3.5570799469348817`*^9, 3.5570800870148935`*^9}, {3.5631879988446646`*^9, 
+   3.563188000780775*^9}, {3.563188128445077*^9, 3.5631881735726585`*^9}, {
+   3.5633167346829996`*^9, 3.563316737471159*^9}, {3.5633975746884165`*^9, 
+   3.5633976216551027`*^9}, 3.563567710779217*^9, {3.56672297248323*^9, 
+   3.5667230321086407`*^9}, {3.567430189035763*^9, 3.5674301956641417`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Import Settings", "Section",
+ CellChangeTimes->{{3.5547357745448246`*^9, 3.5547358120089674`*^9}}],
+
+Cell["\<\
+This is where we import the settings appropriate for the plots etc.\
+\>", "Text",
+ CellChangeTimes->{{3.554735850409164*^9, 3.55473586975327*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Get", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"FileNameDrop", "[", 
+      RowBox[{
+       RowBox[{"CurrentValue", "[", 
+        RowBox[{
+         RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+         "\"\<NotebookDirectory\>\""}], "]"}], ",", 
+       RowBox[{"-", "1"}]}], "]"}], ",", "\"\<Settings\>\"", ",", 
+     "\"\<Settings.m\>\""}], "}"}], "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.555183503359356*^9, 3.5551835064285316`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Supporting Code", "Section",
+ CellChangeTimes->{{3.554735888521344*^9, 3.5547358939286532`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Load the lightbulb images", "Subsection",
+ CellChangeTimes->{{3.5674509265848827`*^9, 3.5674509333602705`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{"LightbulbOff", "=", 
+    RowBox[{"ImageResize", "[", 
+     RowBox[{
+      RowBox[{"Import", "[", "\"\<lightbulb-off.png\>\"", "]"}], ",", "50"}], 
+     "]"}]}], ";", "\[IndentingNewLine]", 
+   RowBox[{"LightbulbOn", "=", 
+    RowBox[{"ImageResize", "[", 
+     RowBox[{
+      RowBox[{"Import", "[", "\"\<lightbulb-on.png\>\"", "]"}], ",", "50"}], 
+     "]"}]}], ";"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.567432851394041*^9, 3.567432881840782*^9}, {
+  3.567434517931361*^9, 3.5674345304730787`*^9}, {3.568145045266444*^9, 
+  3.568145047159552*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Ball of light", "Subsection",
+ CellChangeTimes->{{3.570238250937152*^9, 3.5702382524222364`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Ball", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+  RowBox[{"Graphics", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Hue", "[", 
+        RowBox[{
+         RowBox[{"t", "/", "20"}], ",", "1", ",", ".9", ",", ".2"}], "]"}], 
+       ",", 
+       RowBox[{"Disk", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}], ",", 
+         RowBox[{"t", "/", "35"}]}], "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", "15"}], "}"}]}], "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.5702382546733656`*^9, 3.5702382701472507`*^9}, {
+  3.570238486199608*^9, 3.570238486249611*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Define the clock", "Subsection",
+ CellChangeTimes->{{3.5674509924246483`*^9, 3.5674509942087507`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"clock", "[", 
+    RowBox[{"x_", ",", "y_", ",", "t_", ",", "a_"}], "]"}], ":=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"a", "\[Equal]", "1"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"EdgeForm", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Thickness", "[", "0.003", "]"}], ",", "White"}], "}"}], 
+         "]"}], ",", "Brown", ",", 
+        RowBox[{"Rectangle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "-", "0.85"}], ",", 
+            RowBox[{"y", "-", "0.35"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "+", "0.85"}], ",", 
+            RowBox[{"y", "+", "0.45"}]}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", "White", ",", 
+        RowBox[{"Thickness", "[", "0.003", "]"}], ",", 
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"x", ",", 
+             RowBox[{"y", "-", "0.4"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"x", ",", 
+             RowBox[{"y", "-", "1.15"}]}], "}"}]}], "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"Style", "[", 
+           RowBox[{
+            RowBox[{"DateString", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", "0", ",", "0", ",", 
+                RowBox[{"Floor", "[", 
+                 RowBox[{"t", "/", "60"}], "]"}], ",", 
+                RowBox[{"Floor", "[", 
+                 RowBox[{"Mod", "[", 
+                  RowBox[{"t", ",", "60"}], "]"}], "]"}], ",", "0"}], "}"}], 
+              ",", 
+              RowBox[{"{", 
+               RowBox[{
+               "\"\<Hour24\>\"", ",", "\"\<:\>\"", ",", "\"\<Minute\>\""}], 
+               "}"}]}], "]"}], ",", 
+            RowBox[{"FontFamily", "\[Rule]", "\"\<Stencil\>\""}], ",", 
+            "Green", ",", "20"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], "}"}], "]"}], ",", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"EdgeForm", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Thickness", "[", "0.003", "]"}], ",", "White"}], "}"}], 
+         "]"}], ",", "Brown", ",", 
+        RowBox[{"Rectangle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "-", "0.85"}], ",", 
+            RowBox[{"y", "-", "0.35"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "+", "0.85"}], ",", 
+            RowBox[{"y", "+", "0.45"}]}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", "White", ",", 
+        RowBox[{"Thickness", "[", "0.003", "]"}], ",", 
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"x", ",", 
+             RowBox[{"y", "-", "0.4"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"x", ",", 
+             RowBox[{"y", "-", "1.15"}]}], "}"}]}], "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"Style", "[", 
+           RowBox[{
+            RowBox[{"DateString", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", "0", ",", "0", ",", 
+                RowBox[{"Floor", "[", 
+                 RowBox[{"t", "/", "60"}], "]"}], ",", 
+                RowBox[{"Floor", "[", 
+                 RowBox[{"Mod", "[", 
+                  RowBox[{"t", ",", "60"}], "]"}], "]"}], ",", "0"}], "}"}], 
+              ",", 
+              RowBox[{"{", 
+               RowBox[{
+               "\"\<Hour24\>\"", ",", "\"\<:\>\"", ",", "\"\<Minute\>\""}], 
+               "}"}]}], "]"}], ",", 
+            RowBox[{"FontFamily", "\[Rule]", "\"\<Stencil\>\""}], ",", 
+            "Green", ",", "20"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "y"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+        ",", "Brown", ",", 
+        RowBox[{"Opacity", "[", "0.5", "]"}], ",", 
+        RowBox[{"Rectangle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "-", "0.85"}], ",", 
+            RowBox[{"y", "-", "0.35"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "+", "0.85"}], ",", 
+            RowBox[{"y", "+", "0.45"}]}], "}"}]}], "]"}]}], "}"}], "]"}]}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{
+  3.5681445756485834`*^9, {3.5702388161814823`*^9, 3.570238830542303*^9}, {
+   3.5702389823919888`*^9, 3.5702390455416007`*^9}, {3.5702391231470394`*^9, 
+   3.570239158629069*^9}, {3.5702391914369454`*^9, 3.5702391914689474`*^9}, {
+   3.5702394796384296`*^9, 3.570239495081313*^9}, {3.570239600038316*^9, 
+   3.570239600079318*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Set the x and y positions of the clocks and their initial time\
+\>", "Subsection",
+ CellChangeTimes->{{3.567450979384903*^9, 3.5674510107846985`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"xc", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "10"}], ",", 
+     RowBox[{"-", "8"}], ",", 
+     RowBox[{"-", "6"}], ",", 
+     RowBox[{"-", "4"}], ",", 
+     RowBox[{"-", "2"}], ",", "0", ",", "2", ",", "4", ",", "6", ",", "8", 
+     ",", "10"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yc", "=", "1.2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"tc", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"active", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5674343383810916`*^9, 3.567434383347664*^9}, {
+   3.5674359038426313`*^9, 3.5674359236107616`*^9}, {3.567436030892898*^9, 
+   3.567436031258919*^9}, {3.567436344619842*^9, 3.567436344770851*^9}, {
+   3.5674448819331484`*^9, 3.5674448921117306`*^9}, {3.567445497171338*^9, 
+   3.5674454983544054`*^9}, {3.567448689474927*^9, 3.567448690347977*^9}, {
+   3.5674509384125595`*^9, 3.567450976155718*^9}, 3.5681445807978783`*^9, {
+   3.5683824313034916`*^9, 3.568382434612681*^9}, {3.5702393748054333`*^9, 
+   3.5702393756964846`*^9}, {3.570239467563739*^9, 3.5702394716349716`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["My custom tick function", "Subsection",
+ CellChangeTimes->{{3.567451020272241*^9, 3.5674510254405365`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ticks", "[", 
+    RowBox[{"rangeminus_", ",", "rangeplus_", ",", "spacing_", ",", "tix_"}], 
+    "]"}], ":=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"i", "*", "spacing"}], ",", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Mod", "[", 
+           RowBox[{"i", ",", "tix"}], "]"}], "\[Equal]", "0"}], ",", 
+         RowBox[{"i", "*", "spacing"}], ",", "\"\<\>\""}], "]"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", 
+       RowBox[{"Round", "[", 
+        RowBox[{"rangeminus", "/", "spacing"}], "]"}], ",", 
+       RowBox[{"Round", "[", 
+        RowBox[{"rangeplus", "/", "spacing"}], "]"}]}], "}"}]}], "]"}]}], 
+  ";"}]], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Various initializations", "Subsection",
+ CellChangeTimes->{{3.567451036121148*^9, 3.567451038976311*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"startbuttonstatus", "=", "True"}], ";", " ", 
+   RowBox[{"gostatus", "=", "False"}], ";", 
+   RowBox[{"sliderstatus", "=", "True"}], ";", 
+   RowBox[{"stopbuttonstatus", "=", "False"}], ";", 
+   RowBox[{"k", "=", "1"}], ";"}], " "}]], "Input",
+ CellChangeTimes->{{3.567446127581395*^9, 3.567446129777521*^9}, 
+   3.567446417571982*^9, 3.5674509739725933`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Manipulate Code", "Section",
+ CellChangeTimes->{{3.5547359165049443`*^9, 3.554735918625066*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"tt", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"k", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"$ManipulateResult", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"ManipulateFormattingFunction", "@", 
+     RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"gostatus", "\[Equal]", "True"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Do", "[", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"tt", "\[GreaterEqual]", 
+                 RowBox[{"Abs", "[", 
+                  RowBox[{"xc", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], "]"}]}], ",", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"tc", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "=", 
+                    RowBox[{
+                    RowBox[{"tc", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "+", "0.1"}]}], ";"}], 
+                  ",", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"active", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "=", "1"}], ";"}]}], 
+                 "}"}]}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}], ";", 
+            RowBox[{"tt", "=", 
+             RowBox[{"tt", "+", "0.1"}]}], ";"}], "}"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"k", "\[NotEqual]", "c"}], ",", 
+              RowBox[{"t", "=", 
+               RowBox[{"tc", "[", 
+                RowBox[{"[", "c", "]"}], "]"}]}], ",", 
+              RowBox[{
+               RowBox[{"tc", "[", 
+                RowBox[{"[", "c", "]"}], "]"}], "=", "t"}]}], "]"}], ";", 
+            RowBox[{"k", "=", "c"}], ";"}], "}"}]}], "\[IndentingNewLine]", 
+         "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Show", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"clock", "[", 
+             RowBox[{
+              RowBox[{"xc", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], ",", "yc", ",", 
+              RowBox[{"tc", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], ",", 
+              RowBox[{"active", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"Graphics", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"Text", "[", 
+                 RowBox[{
+                  RowBox[{"Style", "[", 
+                   RowBox[{"Row", "[", 
+                    RowBox[{"{", "\"\<\>\"", "}"}], "]"}], "]"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"0", ",", "0"}], "}"}]}], "]"}], ",", 
+                RowBox[{"Inset", "[", 
+                 RowBox[{
+                  RowBox[{"If", "[", 
+                   RowBox[{
+                    RowBox[{"gostatus", "\[Equal]", "False"}], ",", 
+                    "LightbulbOff", ",", "LightbulbOn"}], "]"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"0", ",", 
+                    RowBox[{"-", "2"}]}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"Center", ",", "Center"}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"2", ",", "2"}], "}"}]}], "]"}]}], "}"}], ",", 
+              RowBox[{"Background", "\[Rule]", "Black"}]}], "]"}], ","}], 
+           "*)"}], "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"gostatus", "\[Equal]", "False"}], ",", 
+            RowBox[{"Graphics", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"Red", ",", 
+                RowBox[{"Arrowheads", "[", "0.03", "]"}], ",", 
+                RowBox[{"Arrow", "[", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"xc", "[", 
+                    RowBox[{"[", "c", "]"}], "]"}], ",", "3"}], "}"}], ",", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"xc", "[", 
+                    RowBox[{"[", "c", "]"}], "]"}], ",", "2"}], "}"}]}], 
+                  "}"}], "]"}]}], "}"}], ",", 
+              RowBox[{"Background", "\[Rule]", "Black"}]}], "]"}], ",", 
+            RowBox[{"Graphics", "[", 
+             RowBox[{
+              RowBox[{"{", "}"}], ",", 
+              RowBox[{"Background", "\[Rule]", "Black"}]}], "]"}]}], "]"}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"gostatus", "\[Equal]", "True"}], ",", 
+            RowBox[{"Ball", "[", 
+             RowBox[{
+              RowBox[{"Dynamic", "[", "tt", "]"}], ",", "0"}], "]"}], ",", 
+            RowBox[{"Graphics", "[", 
+             RowBox[{
+              RowBox[{"{", "}"}], ",", 
+              RowBox[{"Background", "\[Rule]", "Black"}]}], "]"}]}], "]"}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"gostatus", "\[Equal]", "True"}], ",", 
+            RowBox[{"Ball", "[", 
+             RowBox[{
+              RowBox[{"-", 
+               RowBox[{"Dynamic", "[", "tt", "]"}]}], ",", "0"}], "]"}], ",", 
+            RowBox[{"Graphics", "[", 
+             RowBox[{"{", "}"}], "]"}], ",", 
+            RowBox[{"Background", "\[Rule]", "Black"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Ticks", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"ticks", "[", 
+              RowBox[{
+               RowBox[{"-", "11"}], ",", "11", ",", "1", ",", "5"}], "]"}], 
+             ",", 
+             RowBox[{"{", "}"}]}], "}"}]}], ",", 
+          RowBox[{"ImageSize", "\[Rule]", "816"}], ",", 
+          RowBox[{"Axes", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+          RowBox[{"PlotRange", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "11"}], ",", "11"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "4"}], "}"}]}], "}"}]}], ",", 
+          RowBox[{"Background", "->", "Black"}], ",", 
+          RowBox[{"LabelStyle", "->", 
+           RowBox[{"{", 
+            RowBox[{"White", ",", 
+             RowBox[{"FontSize", "->", "15"}], ",", 
+             RowBox[{"FontFamily", "->", "\"\<Helvetica\>\""}]}], "}"}]}], 
+          ",", 
+          RowBox[{"BaseStyle", "->", 
+           RowBox[{"{", 
+            RowBox[{"White", ",", 
+             RowBox[{"FontSize", "->", "18"}], ",", 
+             RowBox[{"FontFamily", "->", "\"\<Helvetica\>\""}]}], "}"}]}], 
+          ",", 
+          RowBox[{"TicksStyle", "->", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"FontSize", "->", "15"}], ",", 
+               RowBox[{"FontFamily", "->", "\"\<Helvetica\>\""}]}], "}"}], 
+             ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"FontSize", "->", "12"}], ",", 
+               RowBox[{"FontFamily", "->", "\"\<Helvetica\>\""}]}], "}"}]}], 
+            "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+       ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"c", ",", "1", ",", 
+           RowBox[{"Style", "[", 
+            RowBox[{"\"\<Active clock\>\"", ",", "$ManipulateLabelStyle"}], 
+            "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"1", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<1\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"2", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<2\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"3", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<3\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"4", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<4\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"5", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<5\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"6", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<6\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"7", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<7\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"8", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<8\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"9", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<9\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"10", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<10\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+           ",", 
+           RowBox[{"11", "\[Rule]", 
+            RowBox[{"Style", "[", 
+             RowBox[{"\"\<11\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}]}], 
+          "}"}], ",", 
+         RowBox[{"ControlType", "\[Rule]", "RadioButtonBar"}], ",", 
+         RowBox[{"Enabled", "\[Rule]", 
+          RowBox[{"Dynamic", "[", "sliderstatus", "]"}]}]}], "}"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t", ",", "0", ",", 
+           RowBox[{"Style", "[", 
+            RowBox[{"\"\<Set the clock\>\"", ",", "$ManipulateLabelStyle"}], 
+            "]"}]}], "}"}], ",", "0", ",", "20", ",", "1", ",", 
+         RowBox[{"Enabled", "\[Rule]", 
+          RowBox[{"Dynamic", "[", "sliderstatus", "]"}]}], ",", 
+         RowBox[{"ControlType", "\[Rule]", "Slider"}]}], "}"}], 
+       "\[IndentingNewLine]", ",", "Delimiter", "\[IndentingNewLine]", ",", 
+       RowBox[{"Row", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Button", "[", 
+           RowBox[{
+            RowBox[{"Style", "[", "\"\<Start\>\"", "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"tt", "=", "0"}], ";", 
+              RowBox[{"gostatus", "=", "True"}], ";", 
+              RowBox[{"sliderstatus", "=", "False"}], ";", 
+              RowBox[{"startbuttonstatus", "=", "False"}], ";", 
+              RowBox[{"stopbuttonstatus", "=", "True"}], ";"}], "}"}], ",", 
+            RowBox[{"ImageSize", "\[Rule]", "70"}], ",", 
+            RowBox[{"Enabled", "\[Rule]", 
+             RowBox[{"Dynamic", "[", "startbuttonstatus", "]"}]}]}], "]"}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"Button", "[", 
+           RowBox[{
+            RowBox[{"Style", "[", "\"\<Reset\>\"", "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"gostatus", "=", "False"}], ";", 
+              RowBox[{"sliderstatus", "=", "True"}], ";", 
+              RowBox[{"startbuttonstatus", "=", "True"}], ";", 
+              RowBox[{"stopbuttonstatus", "=", "False"}], ";", 
+              RowBox[{"tc", "=", 
+               RowBox[{"Table", "[", 
+                RowBox[{"0", ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}]}], ";", 
+              RowBox[{"active", "=", 
+               RowBox[{"Table", "[", 
+                RowBox[{"0", ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i", ",", "1", ",", "11"}], "}"}]}], "]"}]}], ";", 
+              RowBox[{"t", "=", "0"}], ";", 
+              RowBox[{"c", "=", "1"}], ";"}], "}"}], ",", 
+            RowBox[{"ImageSize", "\[Rule]", "70"}]}], "]"}]}], 
+         "\[IndentingNewLine]", "}"}], "]"}], "\[IndentingNewLine]", ",", 
+       RowBox[{"AppearanceElements", "\[Rule]", "None"}], 
+       "\[IndentingNewLine]", ",", "##", "\[IndentingNewLine]", ",", 
+       RowBox[{"ContinuousAction", "\[Rule]", "True"}]}], "]"}]}], "&"}], "[", 
+   RowBox[{"Sequence", "@@", "$BaseManipulateOptions"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.5674511096873555`*^9, 3.5674511419602013`*^9}, {
+   3.568144596638784*^9, 3.5681446075194063`*^9}, {3.5681446482637367`*^9, 
+   3.5681447894328113`*^9}, {3.568144826756946*^9, 3.568144956397361*^9}, {
+   3.5681449956366053`*^9, 3.5681450045931177`*^9}, {3.5681450355358877`*^9, 
+   3.568145122462859*^9}, {3.5683824646223974`*^9, 3.568382583679207*^9}, {
+   3.5698051953817186`*^9, 3.569805195553319*^9}, {3.569805231153581*^9, 
+   3.569805233462385*^9}, {3.5698053416485753`*^9, 3.5698053417421756`*^9}, {
+   3.5698054562151766`*^9, 3.569805463437989*^9}, {3.569805496073247*^9, 
+   3.5698054981948504`*^9}, {3.569805684006777*^9, 3.5698056845371776`*^9}, {
+   3.56980574281888*^9, 3.5698057601505103`*^9}, {3.569805851488671*^9, 
+   3.5698058525806727`*^9}, {3.569805899349555*^9, 3.569805900160756*^9}, {
+   3.5702377814282975`*^9, 3.5702377997553453`*^9}, {3.5702379093706155`*^9, 
+   3.5702379790826025`*^9}, {3.5702380176768103`*^9, 
+   3.5702380453883953`*^9}, {3.570238156909774*^9, 3.57023822170548*^9}, {
+   3.5702382852681155`*^9, 3.5702382854141235`*^9}, {3.570238338359152*^9, 
+   3.570238384511792*^9}, {3.5702384481164303`*^9, 3.570238458289012*^9}, {
+   3.5702385074848256`*^9, 3.570238507529828*^9}, {3.5702385659481697`*^9, 
+   3.5702385659931717`*^9}, {3.5702386885771837`*^9, 3.570238695814597*^9}, 
+   3.570239186708675*^9, {3.5702395095201387`*^9, 3.5702395719447093`*^9}, {
+   3.573840740485379*^9, 3.573840770274899*^9}, {3.573840803772711*^9, 
+   3.573840884644033*^9}, {3.601843101564715*^9, 3.601843114385448*^9}}],
+
+Cell[BoxData[
+ FrameBox[
+  TagBox[
+   StyleBox[
+    DynamicModuleBox[{$CellContext`c$$ = 1, $CellContext`t$$ = 0, 
+     Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+     Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+        Hold[$CellContext`c$$], 1, 
+        Style["Active clock", {15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}]}, {
+       1 -> Style["1", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 2 -> 
+        Style["2", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 3 -> 
+        Style["3", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 4 -> 
+        Style["4", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 5 -> 
+        Style["5", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 6 -> 
+        Style["6", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 7 -> 
+        Style["7", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 8 -> 
+        Style["8", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 9 -> 
+        Style["9", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 10 -> 
+        Style["10", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}], 11 -> 
+        Style["11", {15, FontFamily -> "News Gothic MT", 
+           GrayLevel[1]}]}}, {{
+        Hold[$CellContext`t$$], 0, 
+        Style["Set the clock", {15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}]}, 0, 20, 1}, {
+       Hold[
+        Row[{
+          Button[
+           Style[
+           "Start"], {$CellContext`tt = 0; $CellContext`gostatus = 
+             True; $CellContext`sliderstatus = 
+             False; $CellContext`startbuttonstatus = 
+             False; $CellContext`stopbuttonstatus = True; Null}, ImageSize -> 
+           70, Enabled -> Dynamic[$CellContext`startbuttonstatus]], 
+          Button[
+           Style[
+           "Reset"], {$CellContext`gostatus = 
+             False; $CellContext`sliderstatus = 
+             True; $CellContext`startbuttonstatus = 
+             True; $CellContext`stopbuttonstatus = False; $CellContext`tc = 
+             Table[0, {$CellContext`i, 1, 11}]; $CellContext`active = 
+             Table[0, {$CellContext`i, 1, 11}]; $CellContext`t$$ = 
+             0; $CellContext`c$$ = 1; Null}, ImageSize -> 70]}]], 
+       Manipulate`Dump`ThisIsNotAControl}}, Typeset`size$$ = {
+     816., {89., 97.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+     Typeset`skipInitDone$$ = False, $CellContext`c$703$$ = 
+     False, $CellContext`t$704$$ = 0}, 
+     DynamicBox[Manipulate`ManipulateBoxes[
+      1, StandardForm, 
+       "Variables" :> {$CellContext`c$$ = 1, $CellContext`t$$ = 0}, 
+       "ControllerVariables" :> {
+         Hold[$CellContext`c$$, $CellContext`c$703$$, False], 
+         Hold[$CellContext`t$$, $CellContext`t$704$$, 0]}, 
+       "OtherVariables" :> {
+        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+         Typeset`specs$$, Typeset`size$$, Typeset`update$$, 
+         Typeset`initDone$$, Typeset`skipInitDone$$}, 
+       "Body" :> (If[$CellContext`gostatus == True, {Do[
+             If[$CellContext`tt >= Abs[
+                Part[$CellContext`xc, $CellContext`i]], {
+              Part[$CellContext`tc, $CellContext`i] = 
+                Part[$CellContext`tc, $CellContext`i] + 0.1; Null, 
+               Part[$CellContext`active, $CellContext`i] = 1; 
+               Null}], {$CellContext`i, 1, 
+              11}]; $CellContext`tt = $CellContext`tt + 0.1; Null}, {
+          If[$CellContext`k != $CellContext`c$$, $CellContext`t$$ = 
+             Part[$CellContext`tc, $CellContext`c$$], 
+             Part[$CellContext`tc, $CellContext`c$$] = $CellContext`t$$]; \
+$CellContext`k = $CellContext`c$$; Null}]; Show[
+          Table[
+           $CellContext`clock[
+            Part[$CellContext`xc, $CellContext`i], $CellContext`yc, 
+            Part[$CellContext`tc, $CellContext`i], 
+            Part[$CellContext`active, $CellContext`i]], {$CellContext`i, 1, 
+            11}], 
+          If[$CellContext`gostatus == False, 
+           Graphics[{Red, 
+             Arrowheads[0.03], 
+             Arrow[{{
+                Part[$CellContext`xc, $CellContext`c$$], 3}, {
+                Part[$CellContext`xc, $CellContext`c$$], 2}}]}, Background -> 
+            Black], 
+           Graphics[{}, Background -> Black]], 
+          If[$CellContext`gostatus == True, 
+           $CellContext`Ball[
+            Dynamic[$CellContext`tt], 0], 
+           Graphics[{}, Background -> Black]], 
+          If[$CellContext`gostatus == True, 
+           $CellContext`Ball[-Dynamic[$CellContext`tt], 0], 
+           Graphics[{}], Background -> Black], Ticks -> {
+            $CellContext`ticks[-11, 11, 1, 5], {}}, ImageSize -> 816, 
+          Axes -> {True, False}, PlotRange -> {{-11, 11}, {-1, 4}}, 
+          Background -> Black, 
+          LabelStyle -> {White, FontSize -> 15, FontFamily -> "Helvetica"}, 
+          BaseStyle -> {White, FontSize -> 18, FontFamily -> "Helvetica"}, 
+          TicksStyle -> {{FontSize -> 15, FontFamily -> "Helvetica"}, {
+            FontSize -> 12, FontFamily -> "Helvetica"}}]), 
+       "Specifications" :> {{{$CellContext`c$$, 1, 
+           Style["Active clock", {15, FontFamily -> "News Gothic MT", 
+             GrayLevel[1]}]}, {
+          1 -> Style["1", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 2 -> 
+           Style["2", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 3 -> 
+           Style["3", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 4 -> 
+           Style["4", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 5 -> 
+           Style["5", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 6 -> 
+           Style["6", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 7 -> 
+           Style["7", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 8 -> 
+           Style["8", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 9 -> 
+           Style["9", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 10 -> 
+           Style["10", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}], 11 -> 
+           Style["11", {15, FontFamily -> "News Gothic MT", 
+              GrayLevel[1]}]}, ControlType -> RadioButtonBar, Enabled -> 
+          Dynamic[$CellContext`sliderstatus]}, {{$CellContext`t$$, 0, 
+           Style["Set the clock", {15, FontFamily -> "News Gothic MT", 
+             GrayLevel[1]}]}, 0, 20, 1, Enabled -> 
+          Dynamic[$CellContext`sliderstatus], ControlType -> Slider}, 
+         Delimiter, 
+         Row[{
+           Button[
+            Style[
+            "Start"], {$CellContext`tt = 0; $CellContext`gostatus = 
+              True; $CellContext`sliderstatus = 
+              False; $CellContext`startbuttonstatus = 
+              False; $CellContext`stopbuttonstatus = True; Null}, ImageSize -> 
+            70, Enabled -> Dynamic[$CellContext`startbuttonstatus]], 
+           Button[
+            Style[
+            "Reset"], {$CellContext`gostatus = 
+              False; $CellContext`sliderstatus = 
+              True; $CellContext`startbuttonstatus = 
+              True; $CellContext`stopbuttonstatus = False; $CellContext`tc = 
+              Table[0, {$CellContext`i, 1, 11}]; $CellContext`active = 
+              Table[0, {$CellContext`i, 1, 11}]; $CellContext`t$$ = 
+              0; $CellContext`c$$ = 1; Null}, ImageSize -> 70]}]}, 
+       "Options" :> {
+        AppearanceElements -> None, SynchronousUpdating -> True, Paneled -> 
+         False, ContinuousAction -> True}, "DefaultOptions" :> {}],
+      ImageSizeCache->{836., {150., 155.}},
+      SingleEvaluation->True],
+     Deinitialization:>None,
+     DynamicModuleValues:>{},
+     Initialization:>({$CellContext`gostatus = False, $CellContext`tt = 
+        0, $CellContext`xc = {-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 
+         10}, $CellContext`tc = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+         0}, $CellContext`active = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+         0}, $CellContext`k = 1, $CellContext`clock[
+          Pattern[$CellContext`x, 
+           Blank[]], 
+          Pattern[$CellContext`y, 
+           Blank[]], 
+          Pattern[$CellContext`t, 
+           Blank[]], 
+          Pattern[$CellContext`a, 
+           Blank[]]] := If[$CellContext`a == 1, 
+          Graphics[{
+            EdgeForm[{
+              Thickness[0.003], White}], Brown, 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 0.45}], White, 
+            Thickness[0.003], 
+            
+            Line[{{$CellContext`x, $CellContext`y - 
+               0.4}, {$CellContext`x, $CellContext`y - 1.15}}], 
+            Text[
+             Style[
+              DateString[{0, 0, 0, 
+                Floor[$CellContext`t/60], 
+                Floor[
+                 Mod[$CellContext`t, 60]], 0}, {"Hour24", ":", "Minute"}], 
+              FontFamily -> "Stencil", Green, 
+              20], {$CellContext`x, $CellContext`y}]}], 
+          Graphics[{
+            EdgeForm[{
+              Thickness[0.003], White}], Brown, 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 0.45}], White, 
+            Thickness[0.003], 
+            
+            Line[{{$CellContext`x, $CellContext`y - 
+               0.4}, {$CellContext`x, $CellContext`y - 1.15}}], 
+            Text[
+             Style[
+              DateString[{0, 0, 0, 
+                Floor[$CellContext`t/60], 
+                Floor[
+                 Mod[$CellContext`t, 60]], 0}, {"Hour24", ":", "Minute"}], 
+              FontFamily -> "Stencil", Green, 
+              20], {$CellContext`x, $CellContext`y}], Brown, 
+            Opacity[0.5], 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 
+              0.45}]}]], $CellContext`clock[
+          Pattern[$CellContext`x, 
+           Blank[]], 
+          Pattern[$CellContext`y, 
+           Blank[]], 
+          Pattern[$CellContext`t, 
+           Blank[]]] := If[$CellContext`t > 0, 
+          Graphics[{
+            EdgeForm[{
+              Thickness[0.003], White}], Brown, 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 0.45}], White, 
+            Thickness[0.003], 
+            
+            Line[{{$CellContext`x, $CellContext`y - 
+               0.4}, {$CellContext`x, $CellContext`y - 1.15}}], 
+            Text[
+             Style[
+              DateString[{0, 0, 0, 
+                Floor[$CellContext`t/60], 
+                Floor[
+                 Mod[$CellContext`t, 60]], 0}, {"Hour24", ":", "Minute"}], 
+              FontFamily -> "Stencil", Green, 
+              20], {$CellContext`x, $CellContext`y}]}], 
+          Graphics[{
+            EdgeForm[{
+              Thickness[0.003], White}], Brown, 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 0.45}], White, 
+            Thickness[0.003], 
+            
+            Line[{{$CellContext`x, $CellContext`y - 
+               0.4}, {$CellContext`x, $CellContext`y - 1.15}}], 
+            Text[
+             Style[
+              DateString[{0, 0, 0, 
+                Floor[$CellContext`t/60], 
+                Floor[
+                 Mod[$CellContext`t, 60]], 0}, {"Hour24", ":", "Minute"}], 
+              FontFamily -> "Stencil", Green, 
+              20], {$CellContext`x, $CellContext`y}], Brown, 
+            Opacity[0.6], 
+            
+            Rectangle[{$CellContext`x - 0.85, $CellContext`y - 
+              0.35}, {$CellContext`x + 0.85, $CellContext`y + 
+              0.45}]}]], $CellContext`yc = 1.2, $CellContext`Ball[
+          Pattern[$CellContext`x$, 
+           Blank[]], 
+          Pattern[$CellContext`y$, 
+           Blank[]]] := Graphics[
+          Table[{
+            Hue[FE`t$$2321/20, 1, 0.9, 0.2], 
+            Disk[{$CellContext`x$, $CellContext`y$}, FE`t$$2321/35]}, {
+           FE`t$$2321, 15}]], FE`t$$2321 = 0, $CellContext`ticks[
+          Pattern[$CellContext`rangeminus, 
+           Blank[]], 
+          Pattern[$CellContext`rangeplus, 
+           Blank[]], 
+          Pattern[$CellContext`spacing, 
+           Blank[]], 
+          Pattern[$CellContext`tix, 
+           Blank[]]] := Table[{$CellContext`i $CellContext`spacing, 
+           If[
+           Mod[$CellContext`i, $CellContext`tix] == 
+            0, $CellContext`i $CellContext`spacing, ""]}, {$CellContext`i, 
+           Round[$CellContext`rangeminus/$CellContext`spacing], 
+           
+           Round[$CellContext`rangeplus/$CellContext`spacing]}], \
+$CellContext`sliderstatus = True, $CellContext`startbuttonstatus = 
+        True, $CellContext`stopbuttonstatus = False}; 
+      Typeset`initDone$$ = True),
+     SynchronousInitialization->True,
+     UnsavedVariables:>{Typeset`initDone$$},
+     UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+    Deployed->True,
+    StripOnInput->False],
+   Manipulate`InterpretManipulate[1]],
+  Alignment->{Automatic, Center},
+  Background->GrayLevel[0],
+  StripOnInput->False]], "Output",
+ CellChangeTimes->{
+  3.5674511956552725`*^9, 3.567451247482237*^9, 3.568144869037364*^9, 
+   3.568144964172806*^9, {3.5681449962706413`*^9, 3.56814500551517*^9}, {
+   3.568145049705698*^9, 3.5681451229208856`*^9}, 3.5681461267513013`*^9, 
+   3.5683825903125863`*^9, 3.569804772510606*^9, 3.5698051966921206`*^9, 
+   3.569805234117586*^9, 3.569805342116576*^9, 3.569805464997992*^9, 
+   3.569805499739253*^9, 3.5698056864091806`*^9, 3.5698057460480857`*^9, 
+   3.569805802052184*^9, 3.569805855716278*^9, 3.5698059007223573`*^9, {
+   3.5702377767110276`*^9, 3.5702378001573687`*^9}, {3.570237911235722*^9, 
+   3.5702379796406345`*^9}, {3.5702380188568773`*^9, 3.57023804582542*^9}, {
+   3.5702381585168657`*^9, 3.570238222144505*^9}, {3.570238355610139*^9, 
+   3.570238384955817*^9}, 3.5702384594230766`*^9, 3.5702385080118556`*^9, 
+   3.5702385669822283`*^9, 3.5702386219233713`*^9, 3.5702387146326733`*^9, {
+   3.5702388199876995`*^9, 3.5702388338244915`*^9}, 3.5702390182130375`*^9, {
+   3.570239164967431*^9, 3.5702391942131042`*^9}, {3.5702392812530823`*^9, 
+   3.570239303749369*^9}, 3.570239336546245*^9, {3.5702393815908213`*^9, 
+   3.5702394025490203`*^9}, {3.570239517858616*^9, 3.5702395723377314`*^9}, 
+   3.5702396097108693`*^9, 3.573840696806634*^9, {3.573840744797133*^9, 
+   3.573840770550523*^9}, {3.573840805439673*^9, 3.573840841859994*^9}, {
+   3.5738408750967417`*^9, 3.5738408850219584`*^9}, 3.573840917643733*^9, 
+   3.573840987718132*^9, 3.6018431184146786`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"ImageDimensions", "[", 
+  RowBox[{"Image", "[", 
+   RowBox[{"Rasterize", "[", "$ManipulateResult", "]"}], "]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CDFInformation", "[", "$ManipulateResult", "]"}], "[", 
+  RowBox[{"[", "1", "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.573840661300733*^9, 3.573840685261668*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"846", ",", "317"}], "}"}]], "Output",
+ CellChangeTimes->{3.573840698861508*^9, 3.573840773627247*^9, 
+  3.573840845024233*^9, 3.5738409907518272`*^9, 3.6018431238819914`*^9}],
+
+Cell[BoxData[
+ RowBox[{"\<\"Size\"\>", "\[Rule]", 
+  RowBox[{"{", 
+   RowBox[{"850", ",", "317"}], "}"}]}]], "Output",
+ CellChangeTimes->{3.573840698861508*^9, 3.573840773627247*^9, 
+  3.573840845024233*^9, 3.5738409907518272`*^9, 3.6018431240650015`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Export CDF", "Section",
+ CellChangeTimes->{{3.5547359350970078`*^9, 3.554735937289133*^9}}],
+
+Cell["This is where we export the CDF file.", "Text",
+ CellChangeTimes->{{3.5547359396732693`*^9, 3.5547359474007115`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"FileNameDrop", "[", 
+       RowBox[{
+        RowBox[{"CurrentValue", "[", 
+         RowBox[{
+          RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+          "\"\<NotebookDirectory\>\""}], "]"}], ",", 
+        RowBox[{"-", "1"}]}], "]"}], ",", "\"\<RelativityCDF\>\""}], "}"}], 
+    "]"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "CDFName", "=", "\"\<25 - Clock Synchronization, Single Frame - NEW\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"CDFDeploy", "[", 
+  RowBox[{
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Directory", "[", "]"}], ",", 
+      RowBox[{"CDFName", "<>", "\"\<.cdf\>\""}]}], "}"}], "]"}], ",", 
+   RowBox[{"DocumentNotebook", "[", 
+    RowBox[{"{", "$ManipulateResult", "}"}], "]"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.55474115152437*^9, 3.5547411622919865`*^9}, {
+   3.5553453917528424`*^9, 3.555345397040145*^9}, 3.555346926088601*^9, {
+   3.555347344832552*^9, 3.555347345480589*^9}, {3.555347430360444*^9, 
+   3.555347430944477*^9}, 3.5553475711444964`*^9, {3.5554153607968426`*^9, 
+   3.5554153614038773`*^9}, {3.5554178860212774`*^9, 3.555417886556308*^9}, {
+   3.5554179241084557`*^9, 3.555417927747664*^9}, {3.5563846342075768`*^9, 
+   3.556384645663232*^9}, {3.563192471767501*^9, 3.563192483664181*^9}, {
+   3.5633167552311754`*^9, 3.5633167594094143`*^9}, 3.5635045969495296`*^9, {
+   3.5635724816580954`*^9, 3.5635724848562784`*^9}, {3.5667256550306635`*^9, 
+   3.566725667579381*^9}, {3.5674511610842953`*^9, 3.567451178197274*^9}, {
+   3.568146130590521*^9, 3.568146133603693*^9}, {3.601843128019228*^9, 
+   3.6018431286832657`*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\Andrej\\\\Dropbox\\\\Quantum Demos \
+(1)\\\\RelativityCDF\\\\25 - Clock Synchronization, Single Frame - \
+NEW.cdf\"\>"], "Output",
+ CellChangeTimes->{
+  3.5553454016194067`*^9, 3.555345632622619*^9, 3.555345788521536*^9, 
+   3.5553461134751225`*^9, {3.555346175240655*^9, 3.5553462035402737`*^9}, 
+   3.555346278733575*^9, 3.5553466471946497`*^9, 3.5553467636383095`*^9, 
+   3.5553469287867556`*^9, 3.555347071646927*^9, 3.555347208219738*^9, 
+   3.55534734619563*^9, 3.5553474313985033`*^9, 3.55534757173353*^9, 
+   3.555347849315407*^9, 3.555347904865584*^9, 3.55534794220772*^9, 
+   3.5554153618819046`*^9, 3.555417883306122*^9, 3.555417934989078*^9, 
+   3.5554180098423595`*^9, 3.555422305640065*^9, 3.555422675207203*^9, 
+   3.5554246273908615`*^9, 3.5554249752767596`*^9, 3.555425842071337*^9, 
+   3.5559368165282373`*^9, 3.5631866950150895`*^9, 3.56319248626233*^9, 
+   3.5631925302568464`*^9, 3.563316761154514*^9, 3.563504601040764*^9, 
+   3.5667256698295097`*^9, 3.5672220552142324`*^9, 3.567451210753136*^9, 
+   3.567451274396776*^9, 3.5681461362778463`*^9, 3.568382663064748*^9, 
+   3.5698048528859468`*^9, 3.5698052104669447`*^9, 3.5698052489220123`*^9, 
+   3.5698053541441975`*^9, 3.5698054787884164`*^9, 3.569805512921276*^9, 
+   3.569805700199605*^9, 3.5698058223010197`*^9, 3.569805861566289*^9, 
+   3.5698059161507845`*^9, 3.57023858694137*^9, 3.5702386269166565`*^9, 
+   3.570238729370517*^9, 3.570239218011465*^9, 3.5702396121930113`*^9, 
+   3.573840955996587*^9, 3.573840995786162*^9, 3.6018431290822887`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1358, 641},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->FrontEnd`FileName[{"Creative"}, "NaturalColor.nb", 
+  CharacterEncoding -> "WindowsANSI"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 680, 9, 65, "Title"],
+Cell[CellGroupData[{
+Cell[1284, 35, 117, 1, 75, "Section"],
+Cell[1404, 38, 1360, 19, 65, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2801, 62, 104, 1, 75, "Section"],
+Cell[2908, 65, 156, 3, 29, "Text"],
+Cell[3067, 70, 635, 17, 62, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3739, 92, 102, 1, 75, "Section"],
+Cell[CellGroupData[{
+Cell[3866, 97, 117, 1, 36, "Subsection"],
+Cell[3986, 100, 604, 15, 62, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4627, 120, 103, 1, 36, "Subsection"],
+Cell[4733, 123, 708, 21, 41, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5478, 149, 108, 1, 36, "Subsection"],
+Cell[5589, 152, 4961, 130, 182, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10587, 287, 160, 3, 36, "Subsection"],
+Cell[10750, 292, 1382, 33, 102, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12169, 330, 113, 1, 36, "Subsection"],
+Cell[12285, 333, 783, 24, 41, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13105, 362, 111, 1, 36, "Subsection"],
+Cell[13219, 365, 406, 9, 41, "Input"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13674, 380, 102, 1, 75, "Section"],
+Cell[CellGroupData[{
+Cell[13801, 385, 14430, 330, 662, "Input"],
+Cell[28234, 717, 15075, 318, 342, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[43346, 1040, 359, 8, 62, "Input"],
+Cell[43708, 1050, 214, 4, 40, "Output"],
+Cell[43925, 1056, 255, 5, 40, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44229, 1067, 97, 1, 75, "Section"],
+Cell[44329, 1070, 123, 1, 29, "Text"],
+Cell[CellGroupData[{
+Cell[44477, 1075, 1780, 38, 82, "Input"],
+Cell[46260, 1115, 1563, 22, 40, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

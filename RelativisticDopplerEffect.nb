@@ -1,0 +1,837 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     34425,        828]
+NotebookOptionsPosition[     32567,        759]
+NotebookOutlinePosition[     32986,        775]
+CellTagsIndexPosition[     32943,        772]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Relativistic Doppler Effect", "Title",
+ CellChangeTimes->{{3.554735751801524*^9, 3.5547357668403845`*^9}, {
+   3.555242551647725*^9, 3.555242559935199*^9}, {3.5562259046406727`*^9, 
+   3.5562259090469246`*^9}, {3.5562262690965185`*^9, 
+   3.5562262691585217`*^9}, {3.557079766632569*^9, 3.557079770006762*^9}, 
+   3.5631879896591387`*^9, {3.5633167254424715`*^9, 3.5633167297497177`*^9}, {
+   3.5633975441826715`*^9, 3.5633975488529387`*^9}, {3.563504543575477*^9, 
+   3.563504545292575*^9}, {3.563567713508373*^9, 3.5635677151144648`*^9}, {
+   3.5667229627036705`*^9, 3.566722969941085*^9}, {3.567430170369695*^9, 
+   3.567430180564278*^9}, 3.5674535249885025`*^9, {3.5675350423474455`*^9, 
+   3.567535052434022*^9}, {3.5675424420923977`*^9, 3.5675424440905123`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Description of Demonstration", "Section",
+ CellChangeTimes->{{3.5547361331773376`*^9, 3.5547361395447016`*^9}}],
+
+Cell["\<\
+This demo illustrates the relativistic Doppler effect.\
+\>", "Text",
+ CellChangeTimes->{{3.55473614494501*^9, 3.554736155336605*^9}, {
+   3.5552425640394335`*^9, 3.555242648784281*^9}, {3.555242683671276*^9, 
+   3.5552426840242963`*^9}, {3.555242746800887*^9, 3.5552427854150953`*^9}, {
+   3.556225919503523*^9, 3.556226112406556*^9}, {3.556226333535204*^9, 
+   3.556226373767505*^9}, {3.5570797740239916`*^9, 3.5570798531355166`*^9}, {
+   3.5570799469348817`*^9, 3.5570800870148935`*^9}, {3.5631879988446646`*^9, 
+   3.563188000780775*^9}, {3.563188128445077*^9, 3.5631881735726585`*^9}, {
+   3.5633167346829996`*^9, 3.563316737471159*^9}, {3.5633975746884165`*^9, 
+   3.5633976216551027`*^9}, 3.563567710779217*^9, {3.56672297248323*^9, 
+   3.5667230321086407`*^9}, {3.567430189035763*^9, 3.5674301956641417`*^9}, 
+   3.5674535420704803`*^9, {3.56753506708286*^9, 3.567535086714983*^9}, {
+   3.567542447154687*^9, 3.5675424585383387`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Import Settings", "Section",
+ CellChangeTimes->{{3.5547357745448246`*^9, 3.5547358120089674`*^9}}],
+
+Cell["\<\
+This is where we import the settings appropriate for the plots etc.\
+\>", "Text",
+ CellChangeTimes->{{3.554735850409164*^9, 3.55473586975327*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Get", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"FileNameDrop", "[", 
+      RowBox[{
+       RowBox[{"CurrentValue", "[", 
+        RowBox[{
+         RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+         "\"\<NotebookDirectory\>\""}], "]"}], ",", 
+       RowBox[{"-", "1"}]}], "]"}], ",", "\"\<Settings\>\"", ",", 
+     "\"\<Settings.m\>\""}], "}"}], "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.555183503359356*^9, 3.5551835064285316`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Supporting Code", "Section",
+ CellChangeTimes->{{3.554735888521344*^9, 3.5547358939286532`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Gamma factor", "Subsection",
+ CellChangeTimes->{{3.5683260201323986`*^9, 3.5683260227325478`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Gamma]", "[", "vv_", "]"}], ":=", 
+   FractionBox["1", 
+    SqrtBox[
+     RowBox[{"1", "-", 
+      SuperscriptBox["vv", "2"]}]]]}], ";"}]], "Input",
+ CellChangeTimes->{{3.5681461855146627`*^9, 3.56814619526622*^9}, 
+   3.568322944329473*^9, {3.568323301554905*^9, 3.5683233446093674`*^9}, {
+   3.5683237583280315`*^9, 3.5683237636393347`*^9}, {3.5683254741431704`*^9, 
+   3.5683254772603483`*^9}, {3.5683260134910192`*^9, 3.568326013913043*^9}, {
+   3.5683260697472367`*^9, 3.568326070209263*^9}, {3.5726145653302183`*^9, 
+   3.572614567241846*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Doppler effect for motion in arbitrary direction", "Subsection",
+ CellChangeTimes->{{3.5683260378204107`*^9, 3.5683260497080903`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Lambda]Observed", "[", 
+    RowBox[{"v_", ",", "\[Lambda]Source_", ",", "\[Theta]_"}], "]"}], ":=", 
+   RowBox[{"\[Lambda]Source", "*", 
+    RowBox[{"\[Gamma]", "[", "v", "]"}], "*", 
+    RowBox[{"(", 
+     RowBox[{"1", "-", 
+      RowBox[{"v", "*", 
+       RowBox[{"Cos", "[", "\[Theta]", "]"}]}]}], ")"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.5683260666330585`*^9, 3.568326067200091*^9}, {
+  3.568326147664693*^9, 3.568326155576146*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Color coded wavefront", "Subsection",
+ CellChangeTimes->{{3.5683260567004905`*^9, 3.5683260607087193`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Doppler", "[", 
+    RowBox[{
+    "x0_", ",", "y0_", ",", "r_", ",", "v_", ",", "\[Lambda]Source_"}], "]"}],
+    ":=", 
+   RowBox[{"ParametricPlot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"x0", "+", 
+          RowBox[{"r", "*", 
+           RowBox[{"Cos", "[", 
+            RowBox[{"-", "\[Phi]"}], "]"}]}]}], ",", 
+         RowBox[{"y0", "+", 
+          RowBox[{"r", "*", 
+           RowBox[{"Sin", "[", 
+            RowBox[{"-", "\[Phi]"}], "]"}]}]}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"x0", "+", 
+          RowBox[{"r", "*", 
+           RowBox[{"Cos", "[", "\[Phi]", "]"}]}]}], ",", 
+         RowBox[{"y0", "+", 
+          RowBox[{"r", "*", 
+           RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}]}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Phi]", ",", "0", ",", "\[Pi]"}], "}"}], ",", 
+     RowBox[{"ColorFunction", "\[Rule]", 
+      RowBox[{"Function", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"x", ",", "y", ",", "\[Phi]"}], "}"}], ",", 
+        RowBox[{
+         RowBox[{"ColorData", "[", "\"\<VisibleSpectrum\>\"", "]"}], "[", 
+         RowBox[{"\[Lambda]Observed", "[", 
+          RowBox[{"v", ",", "\[Lambda]Source", ",", "\[Phi]"}], "]"}], 
+         "]"}]}], "]"}]}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Thickness", "[", "0.005", "]"}], "}"}]}], ",", 
+     RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", 
+     RowBox[{"Axes", "\[Rule]", "False"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Nothing", "=", 
+   RowBox[{"ParametricPlot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Phi]", ",", "0", ",", "\[Pi]"}], "}"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Thickness", "[", "0.000", "]"}], "}"}]}], ",", 
+     RowBox[{"Axes", "\[Rule]", "False"}]}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5683261589993415`*^9, 3.5683261720300865`*^9}, 
+   3.6021982142877865`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Minimum and maximum wavelength of the source", "Subsection",
+ CellChangeTimes->{{3.568326086380188*^9, 3.568326102420106*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[Lambda]Min", "=", "390"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Lambda]Max", "=", "700"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Lambda]Norm", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"\[Lambda]Max", "-", "\[Lambda]Min"}], ")"}], "/", "2"}], "+", 
+    "\[Lambda]Min"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5683257167680473`*^9, 3.5683257580624094`*^9}, 
+   3.568326182247671*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Time dilation and frequency adjusted time", "Subsection",
+ CellChangeTimes->{{3.568326118444022*^9, 3.568326139172208*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EffTime", "[", 
+   RowBox[{"\[Lambda]Source_", ",", "v_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"\[Lambda]Source", "/", "\[Lambda]Norm"}], "*", 
+   RowBox[{"\[Gamma]", "[", "v", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.5683259011315928`*^9, 3.5683259075339584`*^9}, {
+  3.5683259419269257`*^9, 3.5683259569117827`*^9}, {3.568326186223899*^9, 
+  3.568326188463027*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"tmax", "=", "10"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dt", "=", "0.1"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.572615531384321*^9, 3.57261555951896*^9}, {
+  3.572615682412279*^9, 3.572615683927184*^9}, {3.572615728800088*^9, 
+  3.5726157288867483`*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Manipulate Code", "Section",
+ CellChangeTimes->{{3.5547359165049443`*^9, 3.554735918625066*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"$ManipulateResult", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"ManipulateFormattingFunction", "@", 
+     RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"Grid", "[", 
+          RowBox[{
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"Column", "[", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"Text", "[", 
+                  RowBox[{"Row", "[", 
+                   RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{
+                    "\"\<    \!\(\*SubscriptBox[\(\[Lambda]\), \(source\)]\) \
+= \>\"", ",", "$MediumTextStyle"}], "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "\[Lambda]", "]"}], ",", 
+                    "$MediumVariableTextStyle"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\< nm\>\"", ",", "$MediumTextStyle"}], "]"}]}],
+                     "\[IndentingNewLine]", "}"}], "]"}], "]"}], 
+                 "\[IndentingNewLine]", ",", 
+                 RowBox[{"Text", "[", 
+                  RowBox[{"Row", "[", 
+                   RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<    v = \>\"", ",", "$MediumTextStyle"}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"NumberForm", "[", 
+                    RowBox[{"v", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"3", ",", "2"}], "}"}]}], "]"}], "]"}], ",", 
+                    "$MediumVariableTextStyle"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\< c\>\"", ",", "$MediumTextStyle"}], "]"}]}], 
+                    "\[IndentingNewLine]", "}"}], "]"}], "]"}]}], 
+                "\[IndentingNewLine]", "}"}], "]"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Show", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"t", "<", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"k", "+", "1"}], ")"}], "*", 
+                    RowBox[{"EffTime", "[", 
+                    RowBox[{"\[Lambda]", ",", "v"}], "]"}]}]}], ",", 
+                    "Nothing", ",", 
+                    RowBox[{"Doppler", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"k", "+", "1"}], ")"}], "*", "v", "*", 
+                    RowBox[{"EffTime", "[", 
+                    RowBox[{"\[Lambda]", ",", "v"}], "]"}]}], ",", "0", ",", 
+                    RowBox[{"t", "-", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"k", "+", "1"}], ")"}], "*", 
+                    RowBox[{"EffTime", "[", 
+                    RowBox[{"\[Lambda]", ",", "v"}], "]"}]}]}], ",", "v", ",",
+                     "\[Lambda]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", "0", ",", "50", ",", "1"}], "}"}]}], 
+                   "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                  RowBox[{"Graphics", "[", 
+                   RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PointSize", "[", "0.01", "]"}], ",", "Yellow", 
+                    ",", 
+                    RowBox[{"Point", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"t", "*", "v"}], ",", "0"}], "}"}], "]"}]}], 
+                    "\[IndentingNewLine]", "}"}], "]"}], ",", 
+                  RowBox[{"ImageSize", "\[Rule]", 
+                   RowBox[{"{", "455", "}"}]}], ",", 
+                  RowBox[{"PlotRange", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "11"}], ",", "11"}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "11"}], ",", "11"}], "}"}]}], "}"}]}], ",", 
+                  "##"}], "\[IndentingNewLine]", "]"}], "&"}], "[", 
+               RowBox[{"Sequence", "@", "$GraphicsOptions"}], "]"}]}], 
+             "\[IndentingNewLine]", "}"}], "\[IndentingNewLine]", "}"}], ",", 
+           RowBox[{"ItemSize", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"{", 
+              RowBox[{"12", ",", "37.8"}], "}"}], "}"}]}], ",", 
+           RowBox[{"Alignment", "\[Rule]", "Top"}], ",", "##"}], "]"}], "&"}],
+         "[", 
+        RowBox[{"Sequence", "@", "$GridOptions"}], "]"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"\[Lambda]", ",", "\[Lambda]Norm", ",", 
+           RowBox[{"Style", "[", 
+            RowBox[{
+            "\"\<Source wavelength\>\"", ",", "$ManipulateLabelStyle"}], 
+            "]"}]}], "}"}], ",", "390", ",", "700", ",", "1", ",", 
+         RowBox[{"ControlType", "\[Rule]", "Slider"}]}], "}"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"v", ",", "0", ",", 
+           RowBox[{"Style", "[", 
+            RowBox[{"\"\<Velocity\>\"", ",", "$ManipulateLabelStyle"}], 
+            "]"}]}], "}"}], ",", "0", ",", "0.99", ",", "0.01", ",", 
+         RowBox[{"ControlType", "\[Rule]", "Slider"}]}], "}"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"t", ",", "0", ",", 
+           RowBox[{"Style", "[", 
+            RowBox[{"\"\<Time\>\"", ",", "$ManipulateLabelStyle"}], "]"}]}], 
+          "}"}], ",", "0", ",", "tmax", ",", 
+         RowBox[{"ControlType", "\[Rule]", "Slider"}]}], "}"}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"AppearanceElements", "\[Rule]", "None"}], 
+       "\[IndentingNewLine]", ",", "##"}], "]"}]}], "&"}], "[", 
+   RowBox[{"Sequence", "@@", "$BaseManipulateOptions"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.567821529222787*^9, 3.5678215816937885`*^9}, {
+   3.567821694165221*^9, 3.5678216965423574`*^9}, {3.5678218761226287`*^9, 
+   3.567821878807782*^9}, {3.567822024279103*^9, 3.5678220528167353`*^9}, {
+   3.5678223349348717`*^9, 3.5678223464295287`*^9}, {3.567822410323183*^9, 
+   3.567822416892559*^9}, {3.5678225156642084`*^9, 3.567822515777215*^9}, {
+   3.568319537462611*^9, 3.5683195612949743`*^9}, {3.568319890678814*^9, 
+   3.568319891053836*^9}, {3.568320005710394*^9, 3.5683200313908625`*^9}, {
+   3.5683201913510113`*^9, 3.5683202290541677`*^9}, {3.568320274838787*^9, 
+   3.5683202751038017`*^9}, {3.568321997135297*^9, 3.568322008526948*^9}, {
+   3.568322039350711*^9, 3.5683220528184814`*^9}, 3.568322327128171*^9, {
+   3.568322374704892*^9, 3.568322380279211*^9}, {3.5683224737685585`*^9, 
+   3.568322473814561*^9}, {3.56832265580097*^9, 3.568322669167735*^9}, {
+   3.568322739288745*^9, 3.5683227972890625`*^9}, {3.5683230865046053`*^9, 
+   3.5683231073927994`*^9}, {3.5683233529048424`*^9, 3.568323369703803*^9}, {
+   3.568323411225178*^9, 3.568323427384102*^9}, {3.568325647388079*^9, 
+   3.568325650259243*^9}, {3.5683257089265985`*^9, 3.5683257119137697`*^9}, {
+   3.5683257642147613`*^9, 3.5683258738240304`*^9}, {3.568325910552131*^9, 
+   3.568325933850464*^9}, {3.5683259784640155`*^9, 3.5683259874415293`*^9}, {
+   3.5683262920259504`*^9, 3.5683263553855743`*^9}, {3.568326395380862*^9, 
+   3.5683265092273736`*^9}, {3.5683265588302107`*^9, 
+   3.5683265600712814`*^9}, {3.568326627131117*^9, 3.5683266562077804`*^9}, {
+   3.572614640807694*^9, 3.572614709818012*^9}, {3.572614749658395*^9, 
+   3.572614826742944*^9}, {3.5726148595926237`*^9, 3.572614876295051*^9}, {
+   3.572614931196994*^9, 3.5726149702353497`*^9}, {3.572615004276774*^9, 
+   3.572615195364688*^9}, {3.5726152931362762`*^9, 3.572615528214615*^9}, {
+   3.5726155644759483`*^9, 3.5726155649481497`*^9}, {3.57261559599559*^9, 
+   3.572615619042425*^9}, {3.572615666617571*^9, 3.572615733772591*^9}, {
+   3.572615763924139*^9, 3.572615808583302*^9}, {3.60191434571023*^9, 
+   3.601914355242775*^9}, {3.60218946629543*^9, 3.602189517783375*^9}}],
+
+Cell[BoxData[
+ FrameBox[
+  TagBox[
+   StyleBox[
+    DynamicModuleBox[{$CellContext`t$$ = 0, $CellContext`v$$ = 
+     0, $CellContext`\[Lambda]$$ = 545, Typeset`show$$ = True, 
+     Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+     Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+     "\"untitled\"", Typeset`specs$$ = {{{
+        Hold[$CellContext`\[Lambda]$$], 545, 
+        Style["Source wavelength", {15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}]}, 390, 700, 1}, {{
+        Hold[$CellContext`v$$], 0, 
+        Style["Velocity", {15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}]}, 0, 0.99, 0.01}, {{
+        Hold[$CellContext`t$$], 0, 
+        Style["Time", {15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}]}, 0, 10}}, Typeset`size$$ = {648., {228.5, 233.5}}, 
+     Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+     False, $CellContext`\[Lambda]$814$$ = 0, $CellContext`v$815$$ = 
+     0, $CellContext`t$816$$ = 0}, 
+     DynamicBox[Manipulate`ManipulateBoxes[
+      1, StandardForm, 
+       "Variables" :> {$CellContext`t$$ = 0, $CellContext`v$$ = 
+         0, $CellContext`\[Lambda]$$ = 545}, "ControllerVariables" :> {
+         Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$814$$, 0], 
+         Hold[$CellContext`v$$, $CellContext`v$815$$, 0], 
+         Hold[$CellContext`t$$, $CellContext`t$816$$, 0]}, 
+       "OtherVariables" :> {
+        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+         Typeset`specs$$, Typeset`size$$, Typeset`update$$, 
+         Typeset`initDone$$, Typeset`skipInitDone$$}, "Body" :> (Grid[{{
+           Column[{
+             Text[
+              Row[{
+                Style[
+                "    \!\(\*SubscriptBox[\(\[Lambda]\), \(source\)]\) = ", \
+$CellContext`$MediumTextStyle], 
+                Style[
+                 
+                 Dynamic[$CellContext`\[Lambda]$$], \
+$CellContext`$MediumVariableTextStyle], 
+                Style[" nm", $CellContext`$MediumTextStyle]}]], 
+             Text[
+              Row[{
+                Style["    v = ", $CellContext`$MediumTextStyle], 
+                Style[
+                 Dynamic[
+                  
+                  NumberForm[$CellContext`v$$, {3, 
+                   2}]], $CellContext`$MediumVariableTextStyle], 
+                Style[" c", $CellContext`$MediumTextStyle]}]]}], 
+           (Show[
+            Table[
+             
+             If[$CellContext`t$$ < ($CellContext`k + 
+                1) $CellContext`EffTime[$CellContext`\[Lambda]$$, \
+$CellContext`v$$], $CellContext`Nothing, 
+              $CellContext`Doppler[(($CellContext`k + 
+                 1) $CellContext`v$$) $CellContext`EffTime[$CellContext`\
+\[Lambda]$$, $CellContext`v$$], 
+               0, $CellContext`t$$ - ($CellContext`k + 
+                1) $CellContext`EffTime[$CellContext`\[Lambda]$$, \
+$CellContext`v$$], $CellContext`v$$, $CellContext`\[Lambda]$$]], \
+{$CellContext`k, 0, 50, 1}], 
+            Graphics[{
+              PointSize[0.01], Yellow, 
+              Point[{$CellContext`t$$ $CellContext`v$$, 0}]}], 
+            ImageSize -> {455}, PlotRange -> {{-11, 11}, {-11, 11}}, 
+            SlotSequence[1]]& )[
+            Sequence[$CellContext`$GraphicsOptions]]}}, 
+         ItemSize -> {{12, 37.8}}, Alignment -> Top, 
+         SlotSequence[1]]& )[
+         Sequence[$CellContext`$GridOptions]], 
+       "Specifications" :> {{{$CellContext`\[Lambda]$$, 545, 
+           Style["Source wavelength", {15, FontFamily -> "News Gothic MT", 
+             GrayLevel[1]}]}, 390, 700, 1, ControlType -> 
+          Slider}, {{$CellContext`v$$, 0, 
+           Style["Velocity", {15, FontFamily -> "News Gothic MT", 
+             GrayLevel[1]}]}, 0, 0.99, 0.01, ControlType -> 
+          Slider}, {{$CellContext`t$$, 0, 
+           Style["Time", {15, FontFamily -> "News Gothic MT", 
+             GrayLevel[1]}]}, 0, 10, ControlType -> Slider}}, 
+       "Options" :> {
+        AppearanceElements -> None, SynchronousUpdating -> True, Paneled -> 
+         False}, "DefaultOptions" :> {}],
+      ImageSizeCache->{668., {283., 288.}},
+      SingleEvaluation->True],
+     Deinitialization:>None,
+     DynamicModuleValues:>{},
+     Initialization:>({$CellContext`$MediumTextStyle = {
+         15, FontFamily -> "News Gothic MT", 
+          GrayLevel[1]}, $CellContext`$MediumVariableTextStyle = {
+         15, FontFamily -> "News Gothic MT", 
+          RGBColor[49/257, 191/257, 238/257]}, $CellContext`EffTime[
+          Pattern[$CellContext`\[Lambda]Source, 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           
+           Blank[]]] := \
+($CellContext`\[Lambda]Source/$CellContext`\[Lambda]Norm) $CellContext`\
+\[Gamma][$CellContext`v], $CellContext`\[Lambda]Norm = 
+        545, $CellContext`\[Gamma][
+          Pattern[$CellContext`vv, 
+           Blank[]]] := 1/Sqrt[1 - $CellContext`vv^2], $CellContext`Nothing = 
+        Graphics[{{{}, {}, {
+             Hue[0.67, 0.6, 0.6], 
+             Thickness[0.], 
+             Line[CompressedData["
+1:eJxTTMoPSmViYGDwBWIQPQpGwSgYBcMFAACjfwH7
+              "]]}}}, {
+          AxesOrigin -> {0, 0}, PlotRange -> {{-1., 1.}, {-1., 1.}}, 
+           PlotRangeClipping -> True, PlotRangePadding -> {
+             Scaled[0.02], 
+             Scaled[0.02]}}], $CellContext`Doppler[
+          Pattern[$CellContext`x0, 
+           Blank[]], 
+          Pattern[$CellContext`y0, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           Blank[]], 
+          Pattern[$CellContext`\[Lambda]Source, 
+           Blank[]]] := 
+        ParametricPlot[{{$CellContext`x0 + $CellContext`r 
+             Cos[-$CellContext`\[Phi]], $CellContext`y0 + $CellContext`r 
+             Sin[-$CellContext`\[Phi]]}, {$CellContext`x0 + $CellContext`r 
+             Cos[$CellContext`\[Phi]], $CellContext`y0 + $CellContext`r 
+             Sin[$CellContext`\[Phi]]}}, {$CellContext`\[Phi], 0, Pi}, 
+          ColorFunction -> 
+          Function[{$CellContext`x, $CellContext`y, $CellContext`\[Phi]}, 
+            ColorData["VisibleSpectrum"][
+             $CellContext`\[Lambda]Observed[$CellContext`v, $CellContext`\
+\[Lambda]Source, $CellContext`\[Phi]]]], PlotStyle -> {
+            Thickness[0.005]}, ColorFunctionScaling -> False, Axes -> 
+          False], $CellContext`\[Phi] = 2 Pi, $CellContext`x[
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Phi], 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           
+           Blank[]]] := $CellContext`\[Gamma][$CellContext`v] \
+($CellContext`xrest[$CellContext`r, $CellContext`\[Phi], 
+            $CellContext`listint[$CellContext`r], $CellContext`v] + \
+$CellContext`v $CellContext`listint[$CellContext`r]), $CellContext`xrest[
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Phi], 
+           Blank[]], 
+          Pattern[$CellContext`trest, 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           Blank[]]] := $CellContext`r 
+         Sin[$CellContext`v $CellContext`trest + $CellContext`\[Phi]], \
+$CellContext`listint = 
+        InterpolatingFunction[{{0.05, 1.}}, {
+          4, 7, 0, {20}, {4}, 0, 0, 0, 0, Automatic}, {{0.05, 0.1, 
+          0.15000000000000002`, 0.2, 0.25, 0.3, 0.35000000000000003`, 0.4, 
+          0.45, 0.5, 0.55, 0.6000000000000001, 0.6500000000000001, 
+          0.7000000000000001, 0.7500000000000001, 0.8, 0.8500000000000001, 
+          0.9000000000000001, 0.9500000000000001, 1.}}, {
+          Developer`PackedArrayForm, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 
+           12, 13, 14, 15, 16, 17, 18, 19, 20}, {0., 0., 0., 0., 0., 0., 0., 
+           0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}}, {
+          Automatic}], $CellContext`y[
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Phi], 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           
+           Blank[]]] := $CellContext`yrest[$CellContext`r, \
+$CellContext`\[Phi], 
+          $CellContext`listint[$CellContext`r], $CellContext`v], \
+$CellContext`yrest[
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Phi], 
+           Blank[]], 
+          Pattern[$CellContext`trest, 
+           Blank[]], 
+          Pattern[$CellContext`v, 
+           Blank[]]] := $CellContext`r 
+         Cos[$CellContext`v $CellContext`trest + $CellContext`\[Phi]], \
+$CellContext`\[Lambda]Observed[
+          Pattern[$CellContext`v, 
+           Blank[]], 
+          Pattern[$CellContext`\[Lambda]Source, 
+           Blank[]], 
+          Pattern[$CellContext`\[Theta], 
+           
+           Blank[]]] := ($CellContext`\[Lambda]Source \
+$CellContext`\[Gamma][$CellContext`v]) (1 - $CellContext`v 
+          Cos[$CellContext`\[Theta]]), $CellContext`$GraphicsOptions = {
+         BaseStyle -> {
+            GrayLevel[1], FontSize -> 18, FontFamily -> "Helvetica"}, 
+          Background -> GrayLevel[0]}, $CellContext`$GridOptions = {
+         Background -> GrayLevel[0], Frame -> True, FrameStyle -> Directive[{
+             GrayLevel[0], 
+             Thickness[0.01]}]}}; Typeset`initDone$$ = True),
+     SynchronousInitialization->True,
+     UnsavedVariables:>{Typeset`initDone$$},
+     UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+    Deployed->True,
+    StripOnInput->False],
+   Manipulate`InterpretManipulate[1]],
+  Alignment->{Automatic, Center},
+  Background->GrayLevel[0],
+  StripOnInput->False]], "Output",
+ CellChangeTimes->{{3.572615710170229*^9, 3.5726157359540777`*^9}, {
+   3.572615780068667*^9, 3.572615823798704*^9}, 3.582048847426505*^9, 
+   3.601914357168885*^9, 3.60219822466138*^9, 3.6021982818576517`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"ImageDimensions", "[", 
+  RowBox[{"Image", "[", 
+   RowBox[{"Rasterize", "[", "$ManipulateResult", "]"}], "]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CDFInformation", "[", "$ManipulateResult", "]"}], "[", 
+  RowBox[{"[", "1", "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.572614880658956*^9, 3.572614904367737*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"678", ",", "583"}], "}"}]], "Output",
+ CellChangeTimes->{{3.572614901139587*^9, 3.5726149049098454`*^9}, {
+   3.5726151674713173`*^9, 3.572615197363306*^9}, {3.572615302427947*^9, 
+   3.572615347873678*^9}, {3.572615388368677*^9, 3.5726154379361687`*^9}, {
+   3.5726158207278967`*^9, 3.572615825781447*^9}, 3.582048849972022*^9, 
+   3.6019143611791143`*^9, 3.6021982264014797`*^9, 3.602198283654754*^9}],
+
+Cell[BoxData[
+ RowBox[{"\<\"Size\"\>", "\[Rule]", 
+  RowBox[{"{", 
+   RowBox[{"682", ",", "583"}], "}"}]}]], "Output",
+ CellChangeTimes->{{3.572614901139587*^9, 3.5726149049098454`*^9}, {
+   3.5726151674713173`*^9, 3.572615197363306*^9}, {3.572615302427947*^9, 
+   3.572615347873678*^9}, {3.572615388368677*^9, 3.5726154379361687`*^9}, {
+   3.5726158207278967`*^9, 3.572615825781447*^9}, 3.582048849972022*^9, 
+   3.6019143611791143`*^9, 3.6021982264014797`*^9, 3.602198283771761*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Export CDF", "Section",
+ CellChangeTimes->{{3.5547359350970078`*^9, 3.554735937289133*^9}}],
+
+Cell["This is where we export the CDF file.", "Text",
+ CellChangeTimes->{{3.5547359396732693`*^9, 3.5547359474007115`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"FileNameDrop", "[", 
+       RowBox[{
+        RowBox[{"CurrentValue", "[", 
+         RowBox[{
+          RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+          "\"\<NotebookDirectory\>\""}], "]"}], ",", 
+        RowBox[{"-", "1"}]}], "]"}], ",", "\"\<RelativityCDF\>\""}], "}"}], 
+    "]"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CDFName", "=", "\"\<27 - Relativistic Doppler Effect - NEW\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"CDFDeploy", "[", 
+  RowBox[{
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Directory", "[", "]"}], ",", 
+      RowBox[{"CDFName", "<>", "\"\<.cdf\>\""}]}], "}"}], "]"}], ",", 
+   RowBox[{"DocumentNotebook", "[", 
+    RowBox[{"{", "$ManipulateResult", "}"}], "]"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.55474115152437*^9, 3.5547411622919865`*^9}, {
+   3.5553453917528424`*^9, 3.555345397040145*^9}, 3.555346926088601*^9, {
+   3.555347344832552*^9, 3.555347345480589*^9}, {3.555347430360444*^9, 
+   3.555347430944477*^9}, 3.5553475711444964`*^9, {3.5554153607968426`*^9, 
+   3.5554153614038773`*^9}, {3.5554178860212774`*^9, 3.555417886556308*^9}, {
+   3.5554179241084557`*^9, 3.555417927747664*^9}, {3.5563846342075768`*^9, 
+   3.556384645663232*^9}, {3.563192471767501*^9, 3.563192483664181*^9}, {
+   3.5633167552311754`*^9, 3.5633167594094143`*^9}, 3.5635045969495296`*^9, {
+   3.5635724816580954`*^9, 3.5635724848562784`*^9}, {3.5667256550306635`*^9, 
+   3.566725667579381*^9}, {3.5674511610842953`*^9, 3.567451178197274*^9}, {
+   3.567515587067667*^9, 3.567515590219847*^9}, {3.567538678351413*^9, 
+   3.5675386919331894`*^9}, {3.5681462183665414`*^9, 
+   3.5681462350114937`*^9}, {3.6019143636202545`*^9, 3.60191436425329*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\Andrej\\\\Dropbox\\\\Quantum Demos \
+(1)\\\\RelativityCDF\\\\27 - Relativistic Doppler Effect - NEW.cdf\"\>"], \
+"Output",
+ CellChangeTimes->{
+  3.5553454016194067`*^9, 3.555345632622619*^9, 3.555345788521536*^9, 
+   3.5553461134751225`*^9, {3.555346175240655*^9, 3.5553462035402737`*^9}, 
+   3.555346278733575*^9, 3.5553466471946497`*^9, 3.5553467636383095`*^9, 
+   3.5553469287867556`*^9, 3.555347071646927*^9, 3.555347208219738*^9, 
+   3.55534734619563*^9, 3.5553474313985033`*^9, 3.55534757173353*^9, 
+   3.555347849315407*^9, 3.555347904865584*^9, 3.55534794220772*^9, 
+   3.5554153618819046`*^9, 3.555417883306122*^9, 3.555417934989078*^9, 
+   3.5554180098423595`*^9, 3.555422305640065*^9, 3.555422675207203*^9, 
+   3.5554246273908615`*^9, 3.5554249752767596`*^9, 3.555425842071337*^9, 
+   3.5559368165282373`*^9, 3.5631866950150895`*^9, 3.56319248626233*^9, 
+   3.5631925302568464`*^9, 3.563316761154514*^9, 3.563504601040764*^9, 
+   3.5667256698295097`*^9, 3.5672220552142324`*^9, 3.567451210753136*^9, 
+   3.5675156339513483`*^9, 3.5675387317424664`*^9, 3.568146236037552*^9, 
+   3.5681501456131673`*^9, 3.568326677590003*^9, 3.572615830293882*^9, 
+   3.5820488524300957`*^9, 3.6019143646013107`*^9, 3.602198227776558*^9, 
+   3.6021982862149005`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1358, 641},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->FrontEnd`FileName[{"Creative"}, "NaturalColor.nb", 
+  CharacterEncoding -> "WindowsANSI"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 774, 10, 65, "Title"],
+Cell[CellGroupData[{
+Cell[1378, 36, 117, 1, 75, "Section"],
+Cell[1498, 39, 951, 14, 29, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2486, 58, 104, 1, 75, "Section"],
+Cell[2593, 61, 156, 3, 29, "Text"],
+Cell[2752, 66, 635, 17, 62, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3424, 88, 102, 1, 75, "Section"],
+Cell[CellGroupData[{
+Cell[3551, 93, 104, 1, 36, "Subsection"],
+Cell[3658, 96, 598, 13, 62, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4293, 114, 140, 1, 36, "Subsection"],
+Cell[4436, 117, 494, 12, 41, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4967, 134, 113, 1, 36, "Subsection"],
+Cell[5083, 137, 2165, 60, 82, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7285, 202, 132, 1, 36, "Subsection"],
+Cell[7420, 205, 479, 13, 82, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7936, 223, 129, 1, 36, "Subsection"],
+Cell[8068, 226, 405, 9, 41, "Input"],
+Cell[8476, 237, 309, 7, 62, "Input"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8834, 250, 102, 1, 75, "Section"],
+Cell[CellGroupData[{
+Cell[8961, 255, 8928, 178, 622, "Input"],
+Cell[17892, 435, 9844, 214, 608, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27773, 654, 359, 8, 62, "Input"],
+Cell[28135, 664, 443, 7, 40, "Output"],
+Cell[28581, 673, 484, 8, 40, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29114, 687, 97, 1, 75, "Section"],
+Cell[29214, 690, 123, 1, 29, "Text"],
+Cell[CellGroupData[{
+Cell[29362, 695, 1870, 38, 82, "Input"],
+Cell[31235, 735, 1292, 19, 40, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
