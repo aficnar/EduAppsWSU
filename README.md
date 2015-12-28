@@ -1,6 +1,6 @@
 # EduAppsWSU
 
-A sampl of educational apps I coded for World Science U
+A sample of educational apps I coded for World Science U
 
 * I have devised and coded some of the interactive simulations to illustrate physical concepts 
 for Prof. Brian Greene’s courses on [World Science U](http://www.worldscienceu.com/), 
